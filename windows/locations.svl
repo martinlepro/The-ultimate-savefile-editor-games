@@ -1,0 +1,15 @@
+# Emplacements des sauvegardes sous Windows.
+# Une ligne par motif :  <id du jeu>|<motif>      ('#' = commentaire)
+# Motifs : ~ (dossier personnel), %VARIABLE%, * (joker), {d} (nom du dossier parent, ex. Stardew : Saves/Ferme_123/Ferme_123)
+# Plusieurs lignes pour un même jeu = plusieurs emplacements essayés.
+
+stardewvalley|%APPDATA%/StardewValley/Saves/*/{d}
+
+celeste|%PROGRAMFILES(X86)%/Steam/steamapps/common/Celeste/Saves/*.celeste
+celeste|%LOCALAPPDATA%/Celeste/Saves/*.celeste
+
+hollowknight|%USERPROFILE%/AppData/LocalLow/Team Cherry/Hollow Knight/user*.dat
+
+geometrydash|%LOCALAPPDATA%/GeometryDash/CCGameManager.dat
+
+minecraft|%APPDATA%/.minecraft/saves/*/level.dat

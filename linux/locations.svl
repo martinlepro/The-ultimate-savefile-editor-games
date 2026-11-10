@@ -1,0 +1,16 @@
+# Emplacements des sauvegardes sous Linux.
+# Une ligne par motif :  <id du jeu>|<motif>      ('#' = commentaire)
+# Motifs : ~ (dossier personnel), %VARIABLE%, * (joker), {d} (nom du dossier parent, ex. Stardew : Saves/Ferme_123/Ferme_123)
+# Plusieurs lignes pour un même jeu = plusieurs emplacements essayés.
+
+stardewvalley|~/.config/StardewValley/Saves/*/{d}
+
+celeste|~/.local/share/Celeste/Saves/*.celeste
+celeste|~/.local/share/Steam/steamapps/common/Celeste/Saves/*.celeste
+
+hollowknight|~/.config/unity3d/Team Cherry/Hollow Knight/user*.dat
+
+geometrydash|~/.local/share/Steam/steamapps/compatdata/322170/pfx/drive_c/users/steamuser/AppData/Local/GeometryDash/CCGameManager.dat
+geometrydash|~/.steam/steam/steamapps/compatdata/322170/pfx/drive_c/users/steamuser/AppData/Local/GeometryDash/CCGameManager.dat
+
+minecraft|~/.minecraft/saves/*/level.dat

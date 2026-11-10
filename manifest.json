@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "version": "1.0.1",
+  "min_app": "0.3.0",
+  "updated": "2026-11-10",
+  "themes": "themes.json",
+  "icons": "icons.txt",
+  "locations": {
+    "windows": "windows/locations.svl",
+    "linux": "linux/locations.svl",
+    "android": "android/locations.svl"
+  },
+  "fonts": {
+    "pixelify": {
+      "regular": "fonts/pixelify.ttf",
+      "bold": "fonts/pixelify-bold.ttf",
+      "snap": 10
+    },
+    "vt323": {
+      "regular": "fonts/vt323.ttf"
+    },
+    "trajan": {
+      "regular": "fonts/trajan.ttf",
+      "bold": "fonts/trajan-bold.otf"
+    },
+    "celeste": {
+      "regular": "fonts/celeste.otf",
+      "bold": "fonts/celeste-bold.otf"
+    },
+    "blocks": {
+      "regular": "fonts/blocks.ttf"
+    }
+  },
+  "games": {
+    "stardewvalley": {
+      "file": "games/stardewvalley.sve",
+      "stores": [
+        {
+          "name": "Steam",
+          "version": "1.6.15",
+          "url": "https://store.steampowered.com/app/413150"
+        }
+      ]
+    },
+    "celeste": {
+      "file": "games/celeste.sve",
+      "stores": [
+        {
+          "name": "Steam",
+          "version": "1.4.0.0",
+          "url": "https://store.steampowered.com/app/504230"
+        }
+      ]
+    },
+    "hollowknight": {
+      "file": "games/hollowknight.sve",
+      "stores": [
+        {
+          "name": "Steam",
+          "version": "1.5.78.11833",
+          "url": "https://store.steampowered.com/app/367520"
+        }
+      ]
+    },
+    "geometrydash": {
+      "file": "games/geometrydash.sve",
+      "stores": []
+    },
+    "minecraft": {
+      "file": "games/minecraft.sve",
+      "stores": []
+    }
+  },
+  "files": {
+    "android/locations.svl": "c6e1e1bb58a5bec3de1ef4a12a1ba716bce75fdbe4f4cfd7c2a954378ad30ec9",
+    "fonts/blocks.ttf": "eafc9f3fea46a247f4026a9a60701ff05693657ad9ee9ffa9a4a08abe7c54422",
+    "fonts/celeste-bold.otf": "f77fa116a652e4ad8ce153b353dfc397aabaab5b69f39642ef72ec51ab79ef1d",
+    "fonts/celeste.otf": "c3f5e653db65564803c05e42c5f09da8b973796a76335e263464cde61af8b2d4",
+    "fonts/pixelify-bold.ttf": "71df6f024b45060153364e1ec3274694be2baedb6b60778e85989e480a992116",
+    "fonts/pixelify.ttf": "36829e81ef61344f28495f2f8c4ffc3be63c55ab9c2e79f5d99e9ce9316c21f8",
+    "fonts/trajan-bold.otf": "b64b2481a4b88f7dc70b87d7ab541ce6041807b56a7b06c743415be790f747bc",
+    "fonts/trajan.ttf": "5fe0451ffb31ce49f4f7aff1941566fe5ebdc2e51323f69bba31f70324e7785a",
+    "fonts/vt323.ttf": "fd6ed859eb4b342f2e3b9506b53e0a78271c9cec27682dbbdcab8477b2513405",
+    "games/celeste.sve": "9326f9e1db4e1df88d160347568a3e817fb50869a06bc336657baf0811402476",
+    "games/geometrydash.sve": "542abcac283ec18a5873f87ced1e2067a51cca63c53eec3b2b50023b15dc0e51",
+    "games/hollowknight.sve": "fd8275770ede98f310257e52a1cec13ca95497e96d003d091f6a5460889f0993",
+    "games/minecraft.sve": "e030f7a092721a3555a4588a3a9d536e537fdb2c6a5a34e6f0087c35aceec4e4",
+    "games/stardewvalley.sve": "d90e89050cd1d09369ac4ae4d31d27cfb76d79ac1ae4ebe8e651d50066c319db",
+    "icons.txt": "ede0d13682bded421679b99af248146f44ce54eab421e1618e4c6092437a1aa4",
+    "linux/locations.svl": "945e49cff044905ecb1d499aedac64db3acf32d7d3830913d7701c5e5bb6a1fd",
+    "themes.json": "1d3f8a8056784f6b2922c6224653b43f342cabc2f66942c0b9bee0084025d340",
+    "windows/locations.svl": "19732720105f065d5d4fafd249d5f5d6e52ae510870b343ed38a12bcb199933b"
+  }
+}

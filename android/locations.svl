@@ -1,0 +1,15 @@
+# Emplacements des sauvegardes sous Android.
+# Une ligne par motif :  <id du jeu>|<motif>      ('#' = commentaire)
+# Motifs : ~ (dossier personnel), %VARIABLE%, * (joker), {d} (nom du dossier parent, ex. Stardew : Saves/Ferme_123/Ferme_123)
+# Plusieurs lignes pour un même jeu = plusieurs emplacements essayés.
+
+stardewvalley|/storage/emulated/0/Android/data/com.chucklefish.stardewvalley/files/Saves/*/{d}
+stardewvalley|/storage/emulated/0/SaveStudio/StardewValley/*/{d}
+
+celeste|/storage/emulated/0/SaveStudio/Celeste/*.celeste
+
+hollowknight|/storage/emulated/0/SaveStudio/HollowKnight/user*.dat
+
+geometrydash|/storage/emulated/0/SaveStudio/GeometryDash/CCGameManager.dat
+
+minecraft|/storage/emulated/0/SaveStudio/Minecraft/*/level.dat
