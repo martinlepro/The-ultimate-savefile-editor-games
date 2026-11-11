@@ -1,0 +1,23 @@
+# Code qui comprend les fichiers de sauvegarde (xml, gd, hk, nbt), compilé en WebAssembly.
+# SaveStudio télécharge `wasm/savecodecs.wasm` (vérifié par SHA-256) et l'exécute dans un bac à sable sans aucun accès
+# au système : il ne fait que transformer des octets en valeurs lisibles/modifiables, et inversement.
+[package]
+name = "savecodecs"
+version = "1.0.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+serde_json = { version = "1", features = ["preserve_order", "arbitrary_precision"] }
+aes = "0.8"
+base64 = "0.22"
+flate2 = "1"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true

@@ -28,6 +28,8 @@ def referenced(m):
         if m.get(k):
             out.add(m[k])
     out.update(m.get("locations", {}).values())
+    if m.get("codecs", {}).get("file"):
+        out.add(m["codecs"]["file"])
     for f in m.get("fonts", {}).values():
         out.add(f["regular"])
         if f.get("bold"):
@@ -64,6 +66,17 @@ def validate(m):
         for s in g.get("stores", []):
             if not s.get("name") or not s.get("version"):
                 errs.append(f"{gid} : chaque boutique a besoin de « name » et « version »")
+    cd = m.get("codecs")
+    if cd:
+        wf = os.path.join(ROOT, cd.get("file", ""))
+        if os.path.isfile(wf) and open(wf, "rb").read(4) != b"\0asm":
+            errs.append(f"{cd['file']} n'est pas un module WebAssembly")
+        for gid, g in m.get("games", {}).items():
+            p = os.path.join(ROOT, g["file"])
+            if os.path.isfile(p):
+                parts = open(p, encoding="utf-8").read().split(";")[0].split("|")
+                if len(parts) > 4 and parts[4] not in cd.get("formats", []):
+                    errs.append(f"{gid} : format « {parts[4]} » absent de codecs.formats")
     for name, f in m.get("fonts", {}).items():
         if "regular" not in f:
             errs.append(f"police {name} : « regular » manquant")

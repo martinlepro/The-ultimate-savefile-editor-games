@@ -1,14 +1,18 @@
 # SaveStudio — dépôt des jeux
 
 Ce dépôt contient **tout ce qui décrit les jeux** pour [SaveStudio](https://github.com/martinlepro/The-ultimate-savefile-editor) :
-où se trouvent les sauvegardes, comment les lire, les onglets et valeurs modifiables, les icônes de la colonne de gauche, les polices,
-les thèmes de couleurs et les versions des boutiques. L'application n'en contient aucune copie : au **premier lancement** elle propose de télécharger ce dépôt
+où se trouvent les sauvegardes, **le code qui les comprend** (les codecs, compilés en WebAssembly), les onglets et valeurs modifiables (la disposition),
+les icônes de la colonne de gauche, les polices, les thèmes de couleurs et les versions des boutiques.
+SaveStudio, lui, ne fait que le style, la personnalisation et les fonctions « en plus » (partage entre ordinateurs via Tailscale…).
+L'application n'en contient aucune copie : au **premier lancement** elle propose de télécharger ce dépôt
 (fichiers listés dans `manifest.json`, vérifiés par SHA-256), puis, **à chaque démarrage**, compare `version` à celle installée et demande à l'utilisateur
 s'il veut installer la mise à jour (rien n'est téléchargé sans son accord).
 Ajouter ou corriger un jeu ne demande donc **aucune mise à jour de l'application**.
 
 ```
-manifest.json            version du pack, version minimale de l'appli, empreintes des fichiers, polices, jeux (+ versions boutiques)
+manifest.json            version du pack, version minimale de l'appli, empreintes des fichiers, codecs, polices, jeux (+ versions boutiques)
+codecs/                  code Rust qui lit/écrit les formats xml, gd, hk, nbt (tests inclus)
+wasm/savecodecs.wasm     ce code compilé en WebAssembly — généré par le workflow, c'est ce que l'application télécharge
 themes.json              thèmes de couleurs (un par jeu, choisis dans l'en-tête de sa définition)
 icons.txt                icônes pixel-art 12x12 de la colonne de gauche
 games/<id>.sve           une définition par jeu (une seule ligne)
@@ -16,14 +20,14 @@ windows|linux|android/locations.svl    où chercher les sauvegardes, par platefo
 fonts/                   polices
 tools/make_manifest.py   recalcule les empreintes, la date et la version
 tools/build_fonts.py, build_icons.py   (re)génèrent fonts/ et icons.txt
-.github/workflows/manifest.yml   fait tourner make_manifest.py à chaque envoi sur main
+.github/workflows/manifest.yml   teste et compile les codecs, puis fait tourner make_manifest.py à chaque envoi sur main
 ```
 
 ## Publier une modification (version du pack)
 
 1. Modifiez un fichier (sur github.com ou en local) et envoyez sur `main`.
-2. Le workflow **Manifest** valide le pack, recalcule les empreintes et **incrémente `version`** (0.0.+1) dans `manifest.json`
-   (commit automatique `[skip ci]`). Les applications installées proposent alors la mise à jour au prochain démarrage.
+2. Le workflow **Pack** teste les codecs, recompile `wasm/savecodecs.wasm`, valide le pack, recalcule les empreintes et **incrémente `version`** (0.0.+1) dans `manifest.json`
+   (commit automatique `[skip ci]`, qui contient aussi le `.wasm` recompilé). Les applications installées proposent alors la mise à jour au prochain démarrage.
 3. En local : `python3 tools/make_manifest.py` (même effet), `--bump minor|major`, `--version 2.0.0`, `--no-bump`,
    `--min-app 0.3.0` (version minimale de SaveStudio exigée par ce pack, à relever quand un `.sve` utilise une option récente du moteur),
    `--check` (échoue si `manifest.json` n'est pas à jour — utile avant un envoi).
@@ -116,3 +120,22 @@ type|Libellé|chemin|options                                                    
 **Trajan Pro** (Hollow Knight) est une police commerciale d'Adobe et **CELESTE.otf** a une licence inconnue : les publier dans un dépôt **public**
 peut ne pas être permis. Gardez le dépôt privé (l'application ne pourra alors pas le télécharger sans authentification) ou remplacez ces deux fichiers
 (par exemple par *Cinzel*, libre et proche de Trajan, en gardant les mêmes noms de fichiers), puis `python3 tools/build_fonts.py <dossier_polices> <feuille_de_glyphes.png>`.
+
+## Les codecs (le code qui comprend la sauvegarde)
+
+`codecs/` est un petit crate Rust (`cargo test --release --manifest-path codecs/Cargo.toml`) qui sait ouvrir un fichier selon le codec
+déclaré par le jeu (5ᵉ champ de l'en-tête du `.sve` : `xml`, `gd`, `hk`, `nbt`), lire/écrire des valeurs par chemin (`SaveGame/player/money`) et
+ré-encoder le fichier à l'identique. Corriger un bug de lecture, ou ajouter un format, se fait ici — sans publier de nouvelle application
+tant que l'**ABI** (ci-dessous) ne change pas.
+
+Pour compiler à la main : `rustup target add wasm32-unknown-unknown`, puis
+`cargo build --release --manifest-path codecs/Cargo.toml --target wasm32-unknown-unknown` et copier
+`codecs/target/wasm32-unknown-unknown/release/savecodecs.wasm` vers `wasm/savecodecs.wasm` (le workflow le fait tout seul).
+Ajouter un format : un module dans `codecs/src/`, une ligne dans `open()` et dans `CODECS` (`lib.rs`), puis le nom dans `codecs.formats` de `manifest.json`.
+
+**Sécurité** : le module n'a *aucune* importation (pas de fichiers, pas de réseau, pas d'horloge) ; l'application refuse un module qui en demande.
+Il tourne dans l'interpréteur WebAssembly de l'application et ne voit que les octets de la sauvegarde ouverte.
+
+**ABI 1** (`codecs/src/ffi.rs`, `codecs.abi` dans le manifeste) : `ss_abi`, `ss_alloc/ss_free`, `ss_result_ptr/ss_result_len` (tampon résultat),
+`ss_codecs`, `ss_open(codec, données) → handle`, `ss_close`, `ss_get(handle, chemin) → 0 absent | 1 bool | 2 entier | 3 flottant | 4 texte`,
+`ss_set(handle, chemin, type, valeur)`, `ss_expand(handle, chemin)` (jokers), `ss_encode(handle)`. Si l'ABI change, incrémentez-la et relevez `--min-app`.

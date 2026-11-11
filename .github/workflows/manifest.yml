@@ -1,31 +1,46 @@
-# À chaque envoi sur main : valide le pack, recalcule les empreintes et incrémente la version dans manifest.json.
-# Vous pouvez donc modifier un fichier directement sur github.com : l'application proposera la mise à jour.
-name: Manifest
-
+# À chaque envoi sur main :
+#  1. teste les codecs (le code qui comprend les sauvegardes) et les compile en WebAssembly → wasm/savecodecs.wasm
+#  2. valide le pack, recalcule les empreintes SHA-256 et incrémente la version dans manifest.json
+# Vous pouvez donc modifier un .sve, une police ou le code des codecs directement sur github.com :
+# l'application proposera la mise à jour à ses utilisateurs.
+name: Pack
 on:
   push:
     branches: [main]
-    paths-ignore: [manifest.json]
+    paths-ignore: [manifest.json, wasm/savecodecs.wasm]
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  manifest:
+  pack:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: codecs
+      - name: Tester les codecs
+        run: cargo test --release --manifest-path codecs/Cargo.toml
+      - name: Compiler en WebAssembly
+        run: |
+          cargo build --release --manifest-path codecs/Cargo.toml --target wasm32-unknown-unknown
+          mkdir -p wasm
+          cp codecs/target/wasm32-unknown-unknown/release/savecodecs.wasm wasm/savecodecs.wasm
       - name: Valider et recalculer le manifeste
         run: python3 tools/make_manifest.py
-      - name: Publier manifest.json si nécessaire
+      - name: Publier wasm + manifest si nécessaire
         run: |
-          if ! git diff --quiet -- manifest.json; then
+          git add wasm/savecodecs.wasm manifest.json
+          if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add manifest.json
-            git commit -m "manifest: version et empreintes [skip ci]"
+            git commit -m "pack: codecs wasm, version et empreintes [skip ci]"
             git push
           else
-            echo "manifest.json déjà à jour"
+            echo "rien à publier"
           fi

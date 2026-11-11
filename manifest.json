@@ -1,10 +1,20 @@
 {
   "schema": 1,
-  "version": "1.0.1",
-  "min_app": "0.3.0",
-  "updated": "2026-11-10",
+  "version": "1.0.2",
+  "min_app": "0.4.0",
+  "updated": "2026-11-11",
   "themes": "themes.json",
   "icons": "icons.txt",
+  "codecs": {
+    "abi": 1,
+    "file": "wasm/savecodecs.wasm",
+    "formats": [
+      "xml",
+      "gd",
+      "hk",
+      "nbt"
+    ]
+  },
   "locations": {
     "windows": "windows/locations.svl",
     "linux": "linux/locations.svl",
@@ -89,6 +99,7 @@
     "icons.txt": "ede0d13682bded421679b99af248146f44ce54eab421e1618e4c6092437a1aa4",
     "linux/locations.svl": "945e49cff044905ecb1d499aedac64db3acf32d7d3830913d7701c5e5bb6a1fd",
     "themes.json": "1d3f8a8056784f6b2922c6224653b43f342cabc2f66942c0b9bee0084025d340",
+    "wasm/savecodecs.wasm": "e88b3514bf45b0eb3857de2dea9ba551cd28193b5d8bdba4287b169f558e8569",
     "windows/locations.svl": "19732720105f065d5d4fafd249d5f5d6e52ae510870b343ed38a12bcb199933b"
   }
 }
